@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Rasteriza los 5 SVG fuente de assets/svg/ a PNG de 22px y 24px en assets/.
+# Rasteriza los 4 SVG fuente de assets/svg/ a PNG de 22px y 24px en assets/.
 #
-# Genera los 10 ficheros que el binario embebe con include_bytes!:
+# Genera los 8 ficheros que el binario embebe con include_bytes!:
 #   assets/<nombre>-22.png  y  assets/<nombre>-24.png
 #
 # Requiere rsvg-convert (paquete librsvg2-bin / librsvg-tools).
@@ -24,7 +24,7 @@ if ! command -v rsvg-convert >/dev/null 2>&1; then
   exit 1
 fi
 
-NAMES=(discord-closed idle voice-on voice-muted voice-deafened)
+NAMES=(idle voice-on voice-muted voice-deafened)
 SIZES=(22 24)
 
 for name in "${NAMES[@]}"; do
@@ -37,4 +37,4 @@ for name in "${NAMES[@]}"; do
   done
 done
 
-echo "Listos los 10 PNG en $OUT_DIR"
+echo "Listos los 8 PNG en $OUT_DIR"

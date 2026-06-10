@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fallback sin dependencias: genera los 10 PNG de iconos del tray.
+"""Fallback sin dependencias: genera los 8 PNG de iconos del tray.
 
 Solo usa la stdlib de Python 3 (zlib, struct). No requiere PIL, rsvg-convert,
 ImageMagick ni Inkscape. Dibuja iconos flat simples con un mini rasterizador
@@ -10,7 +10,7 @@ regenerar desde los SVG fuente con calidad vectorial, ver scripts/build-icons.sh
 (requiere rsvg-convert).
 
 Uso:  python3 scripts/gen-icons.py
-Salida: assets/<nombre>-22.png y assets/<nombre>-24.png  (10 ficheros)
+Salida: assets/<nombre>-22.png y assets/<nombre>-24.png  (8 ficheros)
 """
 
 import math
@@ -21,7 +21,6 @@ import zlib
 SS = 4  # factor de supersampling para antialiasing
 
 # Paleta (coherente con assets/svg/*.svg)
-GREY = (122, 122, 122, 255)
 LIGHT = (232, 232, 232, 255)
 GREEN = (67, 181, 129, 255)
 RED = (240, 71, 71, 255)
@@ -181,7 +180,6 @@ def draw_slash(c, color):
 
 
 ICONS = {
-    "discord-closed": lambda c: draw_headset(c, GREY),
     "idle": lambda c: draw_headset(c, LIGHT),
     "voice-on": lambda c: draw_mic(c, GREEN),
     "voice-muted": lambda c: (draw_mic(c, RED), draw_slash(c, RED)),
@@ -201,7 +199,7 @@ def main():
             path = os.path.join(out_dir, f"{name}-{size}.png")
             write_png(path, size, rgba)
             print(f"generado {path}")
-    print("Listos los 10 PNG.")
+    print("Listos los 8 PNG.")
 
 
 if __name__ == "__main__":

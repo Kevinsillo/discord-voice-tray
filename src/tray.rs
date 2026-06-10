@@ -15,9 +15,10 @@
 //!
 //! ## Iconos embebidos
 //!
-//! Los 10 PNG (5 estados × {22,24}px) se embeben con `include_bytes!` y se
+//! Los 8 PNG (4 estados × {22,24}px) se embeben con `include_bytes!` y se
 //! decodifican una sola vez al arrancar (`LazyLock`). El binario es
-//! autocontenido: no instala temas de iconos.
+//! autocontenido: no instala temas de iconos. `DiscordClosed` no tiene icono:
+//! el ítem está `Passive` (oculto por el panel) y publica un pixmap vacío.
 
 use std::sync::LazyLock;
 
@@ -38,8 +39,7 @@ macro_rules! png_pair {
     };
 }
 
-/// Bytes PNG por estado, en el mismo orden que [`ALL_STATES`].
-const PNG_DISCORD_CLOSED: (&[u8], &[u8]) = png_pair!("discord-closed");
+/// Bytes PNG por estado con icono (todos salvo `DiscordClosed`).
 const PNG_IDLE: (&[u8], &[u8]) = png_pair!("idle");
 const PNG_VOICE_ON: (&[u8], &[u8]) = png_pair!("voice-on");
 const PNG_VOICE_MUTED: (&[u8], &[u8]) = png_pair!("voice-muted");
@@ -72,12 +72,11 @@ fn decode_argb(png: &[u8]) -> Icon {
 
 /// Tabla de iconos decodificados, una entrada por estado. Se construye una sola
 /// vez (perezosamente) al primer acceso.
-static ICONS: LazyLock<[DecodedIcon; 5]> = LazyLock::new(|| {
+static ICONS: LazyLock<[DecodedIcon; 4]> = LazyLock::new(|| {
     let make = |pair: (&[u8], &[u8])| DecodedIcon {
         pixmaps: vec![decode_argb(pair.0), decode_argb(pair.1)],
     };
     [
-        make(PNG_DISCORD_CLOSED),
         make(PNG_IDLE),
         make(PNG_VOICE_ON),
         make(PNG_VOICE_MUTED),
@@ -85,14 +84,15 @@ static ICONS: LazyLock<[DecodedIcon; 5]> = LazyLock::new(|| {
     ]
 });
 
-/// Índice en [`ICONS`] para cada estado (orden fijo del array estático).
-fn icon_index(state: VoiceState) -> usize {
+/// Índice en [`ICONS`] para cada estado, o `None` si el estado no tiene icono
+/// (`DiscordClosed`: el ítem está `Passive` y el panel lo oculta).
+fn icon_index(state: VoiceState) -> Option<usize> {
     match state {
-        VoiceState::DiscordClosed => 0,
-        VoiceState::Idle => 1,
-        VoiceState::VoiceUnmuted => 2,
-        VoiceState::VoiceMuted => 3,
-        VoiceState::VoiceDeafened => 4,
+        VoiceState::DiscordClosed => None,
+        VoiceState::Idle => Some(0),
+        VoiceState::VoiceUnmuted => Some(1),
+        VoiceState::VoiceMuted => Some(2),
+        VoiceState::VoiceDeafened => Some(3),
     }
 }
 
@@ -128,9 +128,30 @@ impl ksni::Tray for VoiceTray {
         "Discord Voice Tray".into()
     }
 
-    /// Icono ARGB32 por estado (22px + 24px; el panel elige).
+    /// Estado SNI del ítem: `Passive` cuando Discord está cerrado (los hosts
+    /// suelen ocultar los ítems pasivos), `Active` en el resto de estados.
+    ///
+    /// En pasivo el ítem publica un `icon_pixmap` vacío (no hay icono que
+    /// mostrar) pero mantiene el `tool_tip`. La transición `Active`↔`Passive`
+    /// la propaga ksni (evento `NewStatus`) por el mismo camino
+    /// `watch.changed()` → `Handle::update()` que ya repinta el icono.
+    fn status(&self) -> ksni::Status {
+        match self.state {
+            VoiceState::DiscordClosed => ksni::Status::Passive,
+            VoiceState::Idle
+            | VoiceState::VoiceUnmuted
+            | VoiceState::VoiceMuted
+            | VoiceState::VoiceDeafened => ksni::Status::Active,
+        }
+    }
+
+    /// Icono ARGB32 por estado (22px + 24px; el panel elige). Vacío en
+    /// `DiscordClosed`: el ítem está `Passive` y no hay nada que mostrar.
     fn icon_pixmap(&self) -> Vec<Icon> {
-        ICONS[icon_index(self.state)].pixmaps.clone()
+        match icon_index(self.state) {
+            Some(i) => ICONS[i].pixmaps.clone(),
+            None => Vec::new(),
+        }
     }
 
     /// Tooltip descriptivo usando el texto canónico de `state::label()`.
@@ -223,4 +244,58 @@ pub async fn tray_task(mut rx: watch::Receiver<VoiceState>, cancel: Cancellation
     }
 
     handle.shutdown().await;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ksni::Tray;
+
+    /// Construye un `VoiceTray` en el estado dado, sin runtime tokio ni DBus.
+    /// `CancellationToken::new()` es síncrono; el token no se usa en `status()`.
+    fn tray(state: VoiceState) -> VoiceTray {
+        VoiceTray::new(state, CancellationToken::new())
+    }
+
+    #[test]
+    fn discord_closed_es_passive() {
+        assert_eq!(tray(VoiceState::DiscordClosed).status(), ksni::Status::Passive);
+    }
+
+    #[test]
+    fn idle_es_active() {
+        assert_eq!(tray(VoiceState::Idle).status(), ksni::Status::Active);
+    }
+
+    #[test]
+    fn voice_unmuted_es_active() {
+        assert_eq!(tray(VoiceState::VoiceUnmuted).status(), ksni::Status::Active);
+    }
+
+    #[test]
+    fn voice_muted_es_active() {
+        assert_eq!(tray(VoiceState::VoiceMuted).status(), ksni::Status::Active);
+    }
+
+    #[test]
+    fn voice_deafened_es_active() {
+        assert_eq!(tray(VoiceState::VoiceDeafened).status(), ksni::Status::Active);
+    }
+
+    #[test]
+    fn discord_closed_sin_icono() {
+        assert!(tray(VoiceState::DiscordClosed).icon_pixmap().is_empty());
+    }
+
+    #[test]
+    fn estados_activos_con_icono() {
+        for state in [
+            VoiceState::Idle,
+            VoiceState::VoiceUnmuted,
+            VoiceState::VoiceMuted,
+            VoiceState::VoiceDeafened,
+        ] {
+            assert_eq!(tray(state).icon_pixmap().len(), 2, "{state:?}");
+        }
+    }
 }
