@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="150" viewBox="0 0 720 150" font-family="DejaVu Sans, Verdana, sans-serif">
+  <!-- fondo de escritorio -->
+  <rect width="720" height="150" rx="10" fill="#1d2330"/>
+
+  <!-- panel superior estilo XFCE/KDE -->
+  <rect x="0" y="0" width="720" height="40" fill="#22262b"/>
+  <line x1="0" y1="40" x2="720" y2="40" stroke="#11141a" stroke-width="1"/>
+
+  <!-- lado izquierdo del panel: app activa -->
+  <circle cx="22" cy="20" r="4" fill="#43b581"/>
+  <text x="36" y="25" font-size="13" fill="#9aa3ad">discord-voice-tray</text>
+
+  <!-- bandeja: iconos vecinos de relleno (wifi y volumen) -->
+  <g fill="none" stroke="#8b939d" stroke-width="2" stroke-linecap="round">
+    <!-- wifi -->
+    <path d="M531.5 16.5 a11 11 0 0 1 17 0"/>
+    <path d="M535.5 21 a6.5 6.5 0 0 1 9 0"/>
+    <circle cx="540" cy="26" r="1.5" fill="#8b939d" stroke="none"/>
+    <!-- volumen -->
+    <polygon points="572,17 577,17 583,12 583,28 577,23 572,23" fill="#8b939d" stroke="none"/>
+    <path d="M587 15 a7 7 0 0 1 0 10"/>
+  </g>
+
+  <!-- hueco resaltado de nuestro icono -->
+  <rect x="616" y="4" width="32" height="32" rx="6" fill="#2c313a"/>
+
+  <!-- separador y reloj -->
+  <line x1="660" y1="10" x2="660" y2="30" stroke="#3a3f47" stroke-width="1"/>
+  <text x="672" y="25" font-size="14" fill="#c8cdd4">14:32</text>
+
+  <!-- tooltip bajo el icono -->
+  <polygon points="626,58 638,58 632,49" fill="#14161a"/>
+  <rect x="442" y="58" width="266" height="34" rx="6" fill="#14161a" stroke="#3a3f47" stroke-width="1"/>
+
+  <!-- pie -->
+  <text x="20" y="134" font-size="13" fill="#5f6873">The tray icon follows your Discord voice state in real time.</text>
+
+  <!-- ESTADO 1: conectado sin canal (0s-3s) -->
+  <g opacity="1">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="linear"
+             values="1;1;0;0;1" keyTimes="0;0.23;0.25;0.97;1"/>
+    <g transform="translate(620,8)" fill="none" stroke="#e8e8e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 13 v-1 a7 7 0 0 1 14 0 v1"/>
+      <rect x="3" y="13" width="4" height="6" rx="1.5" fill="#e8e8e8"/>
+      <rect x="17" y="13" width="4" height="6" rx="1.5" fill="#e8e8e8"/>
+    </g>
+    <text x="575" y="80" font-size="14" fill="#d8dbe0" text-anchor="middle">Connected — no voice channel</text>
+  </g>
+
+  <!-- ESTADO 2: en canal, micro abierto (3s-6s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="linear"
+             values="0;0;1;1;0;0" keyTimes="0;0.23;0.25;0.48;0.5;1"/>
+    <g transform="translate(620,8)" fill="#43b581" stroke="#43b581" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="3" width="6" height="11" rx="3"/>
+      <path d="M6 11 a6 6 0 0 0 12 0" fill="none"/>
+      <line x1="12" y1="17" x2="12" y2="21"/>
+      <line x1="8" y1="21" x2="16" y2="21"/>
+    </g>
+    <text x="575" y="80" font-size="14" fill="#d8dbe0" text-anchor="middle">In channel — mic open</text>
+  </g>
+
+  <!-- ESTADO 3: muteado (6s-9s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="linear"
+             values="0;0;1;1;0;0" keyTimes="0;0.48;0.5;0.73;0.75;1"/>
+    <g transform="translate(620,8)">
+      <g fill="#f04747" stroke="#f04747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="3" width="6" height="11" rx="3"/>
+        <path d="M6 11 a6 6 0 0 0 12 0" fill="none"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+      </g>
+      <line x1="4" y1="3" x2="20" y2="21" stroke="#22262b" stroke-width="4" stroke-linecap="round"/>
+      <line x1="4" y1="3" x2="20" y2="21" stroke="#f04747" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="575" y="80" font-size="14" fill="#d8dbe0" text-anchor="middle">In channel — muted</text>
+  </g>
+
+  <!-- ESTADO 4: ensordecido (9s-12s) -->
+  <g opacity="0">
+    <animate attributeName="opacity" dur="12s" repeatCount="indefinite" calcMode="linear"
+             values="0;0;1;1;0" keyTimes="0;0.73;0.75;0.97;1"/>
+    <g transform="translate(620,8)">
+      <g fill="none" stroke="#f04747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 13 v-1 a7 7 0 0 1 14 0 v1"/>
+        <rect x="3" y="13" width="4" height="6" rx="1.5" fill="#f04747"/>
+        <rect x="17" y="13" width="4" height="6" rx="1.5" fill="#f04747"/>
+      </g>
+      <line x1="4" y1="4" x2="20" y2="20" stroke="#22262b" stroke-width="4" stroke-linecap="round"/>
+      <line x1="4" y1="4" x2="20" y2="20" stroke="#f04747" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text x="575" y="80" font-size="14" fill="#d8dbe0" text-anchor="middle">In channel — deafened</text>
+  </g>
+</svg>

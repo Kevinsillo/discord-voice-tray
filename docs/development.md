@@ -19,7 +19,7 @@ How the code is organized and how to modify it without breaking its invariants.
 
 - **`state.rs` and `protocol.rs` are pure** (no I/O): that is what makes them testable without a socket. New state logic goes in `reduce()`, with tests.
 - **Retries live only in `run_ipc_loop`**. `client.rs` returns a `Result` and ends; do not add reconnection loops inside the session.
-- **The state→icon mapping lives only in `tray.rs`**.
+- **The state→icon mapping lives only in `tray.rs`**. `DiscordClosed` has no icon: the item switches to SNI `Status=Passive` and publishes an empty pixmap, so conforming panels hide it.
 - Shutdown is coordinated with a `CancellationToken` (`tokio-util`) shared between the Quit menu item, the IPC loop and `main`.
 - The daemon never writes to Discord: `SET_VOICE_SETTINGS` and friends are deliberately out of scope.
 

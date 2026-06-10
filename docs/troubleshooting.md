@@ -1,6 +1,6 @@
 # Troubleshooting
 
-**The icon does not show up.** Check that your panel supports StatusNotifierItem: `busctl --user list | grep StatusNotifier` must show a `StatusNotifierWatcher`. XFCE 4.16+ and KDE Plasma ship it; on GNOME install the AppIndicator extension.
+**The icon does not show up.** First: if Discord is closed, the icon is hidden by design (the item goes SNI `Passive`) — start Discord and it will appear. Otherwise, check that your panel supports StatusNotifierItem: `busctl --user list | grep StatusNotifier` must show a `StatusNotifierWatcher`. XFCE 4.16+ and KDE Plasma ship it; on GNOME install the AppIndicator extension.
 
 **It does not connect to Discord.** `$XDG_RUNTIME_DIR/discord-ipc-0` (or the Flatpak/Snap variants) must exist. Only the official desktop client creates that socket — Discord in the browser does not.
 
@@ -10,4 +10,4 @@
 
 **The official Discord icon is redundant.** Hide it in your panel's tray configuration. On XFCE it may be listed as "Google Chrome": that is the internal name Electron registers for its legacy icon.
 
-**Discord was closed and the icon is slow to react when reopening.** Reconnection uses exponential backoff capped at 30 s; after several failed attempts the next one can take up to half a minute.
+**Discord was closed and the icon is slow to reappear when reopening.** Reconnection uses exponential backoff capped at 30 s; after several failed attempts the next one can take up to half a minute.
