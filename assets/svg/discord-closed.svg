@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Headset gris apagado: Discord cerrado / sin conexión -->
+  <g fill="none" stroke="#7a7a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- diadema -->
+    <path d="M5 13 v-1 a7 7 0 0 1 14 0 v1"/>
+    <!-- auriculares -->
+    <rect x="3" y="13" width="4" height="6" rx="1.5" fill="#7a7a7a"/>
+    <rect x="17" y="13" width="4" height="6" rx="1.5" fill="#7a7a7a"/>
+  </g>
+</svg>

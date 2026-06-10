@@ -1,0 +1,32 @@
+# Unidad systemd user-level para discord-voice-tray (plantilla, NO se autoinstala).
+#
+# Instalación manual:
+#   mkdir -p ~/.config/systemd/user
+#   cp systemd/discord-voice-tray.service ~/.config/systemd/user/
+#   # Ajusta ExecStart a la ruta real del binario (ver abajo).
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now discord-voice-tray.service
+#
+# Logs:   journalctl --user -u discord-voice-tray -f
+# Parar:  systemctl --user stop discord-voice-tray.service
+
+[Unit]
+Description=Indicador de estado de voz de Discord en la bandeja del sistema
+Documentation=https://github.com/kevin/discord-voice-tray
+# Arrancar tras la sesión gráfica (donde vive el host de StatusNotifierItem).
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+# Ajusta la ruta al binario instalado. Ejemplos:
+#   ~/.cargo/bin/discord-voice-tray      (cargo install --path .)
+#   ~/.local/bin/discord-voice-tray      (copia manual)
+ExecStart=%h/.cargo/bin/discord-voice-tray
+Restart=on-failure
+RestartSec=5
+# Nivel de log (opcional). Descomenta para más detalle:
+# Environment=RUST_LOG=discord_voice_tray=debug,info
+
+[Install]
+WantedBy=graphical-session.target

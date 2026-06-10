@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Microfono rojo con barra diagonal: muteado -->
+  <g fill="#f04747" stroke="#f04747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="3" width="6" height="11" rx="3"/>
+    <path d="M6 11 a6 6 0 0 0 12 0" fill="none"/>
+    <line x1="12" y1="17" x2="12" y2="21"/>
+    <line x1="8" y1="21" x2="16" y2="21"/>
+  </g>
+  <!-- barra diagonal con borde para que destaque sobre el micro -->
+  <line x1="4" y1="3" x2="20" y2="21" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+  <line x1="4" y1="3" x2="20" y2="21" stroke="#f04747" stroke-width="2" stroke-linecap="round"/>
+</svg>

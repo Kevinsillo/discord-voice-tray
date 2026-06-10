@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Headset claro: conectado a Discord, sin canal de voz -->
+  <g fill="none" stroke="#e8e8e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 13 v-1 a7 7 0 0 1 14 0 v1"/>
+    <rect x="3" y="13" width="4" height="6" rx="1.5" fill="#e8e8e8"/>
+    <rect x="17" y="13" width="4" height="6" rx="1.5" fill="#e8e8e8"/>
+  </g>
+</svg>

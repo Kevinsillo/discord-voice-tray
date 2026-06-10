@@ -1,0 +1,30 @@
+# Rust / Cargo
+/target/
+Cargo.lock.bak
+
+# Archivos de entorno y secretos
+.env
+*.env
+
+# Datos de herramientas internas
+.pillbox/
+.claude/
+.trash/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Binarios sueltos
+*.o
+*.so
+*.rlib
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
